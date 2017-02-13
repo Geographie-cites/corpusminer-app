@@ -24,9 +24,9 @@ The full semantic network is visualised in the next tab, where the user can zoom
 The Semantic network analysis focuses on the words chosen to write Cybergeo articles.
 The Chronograms show the evolution of articles published in Cybergeo which include a pattern given by the user. Multiple patterns can be tracked simultaneously to suggest evolutions of research trends in the journal.
 
-## Wordclouds
-
 The wordclouds shows the relative importance of the different words from the same root over 20 years of Cybergeo articles. The sentences report the contextualised uses of this root.
+
+## Keywords network
 
 The Keywords network tab shows the distribution of articles by keyword as well as the centrality of single keywords and the frequences of co-occurences of pairs of keywords (compared to their expected association).
 
