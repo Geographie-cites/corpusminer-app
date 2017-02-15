@@ -432,52 +432,23 @@ shinyServer(function(input, output, session) {
   
   # panel "Communities"
   output$plotcomm <- renderPlot({
-    g <- SelectComm()
-    sizes <- plotcomm_sizes( input$vsizecom, input$esizecom, edges = E(g), vertices = V(g) )
-    VisuComm(g, 
-             comm = input$commid, 
-             vertcol = "#2b3e50", 
-             vertsize = sizes$vertsize, 
-             vfacsize = input$vfacsizecom,
-             edgesize = sizes$edgesize,
-             efacsize = input$efacsizecom, 
-             textsize = input$tsizecom
-    )
-    
+    VisuComm( SelectComm(), 
+              vsize.prop = input$vsizecom, vsize.fac = input$vfacsizecom, vsize.default = 1, 
+              esize.prop = input$esizecom, esize.fac = input$efacsizecom, 
+              vertex.label.cex = input$tsizecom / 10
+              )
   })
   
   output$downcomm <- downloadHandler(
     filename = "Community.svg",
     content = function(file) {
-      if(input$vsizecom == "uni" && input$esizecom == "rel"){
-        vertsize <- 30
-        edgesize <- E(SelectComm())$relresid
-      } else if(input$vsizecom == "uni" && input$esizecom == "nbl"){
-        vertsize <- 30
-        edgesize <- E(SelectComm())$obsfreq
-      } else if(input$vsizecom == "poi" && input$esizecom == "rel"){
-        vertsize <- V(SelectComm())$nbauth
-        edgesize <- E(SelectComm())$relresid
-      } else if(input$vsizecom == "poi" && input$esizecom == "nbl"){
-        vertsize <- V(SelectComm())$nbauth
-        edgesize <- E(SelectComm())$obsfreq
-      } else if(input$vsizecom == "deg" && input$esizecom == "rel"){
-        vertsize <- V(SelectComm())$degbeg
-        edgesize <- E(SelectComm())$relresid
-      } else if(input$vsizecom == "deg" && input$esizecom == "nbl"){
-        vertsize <- V(SelectComm())$degbeg
-        edgesize <- E(SelectComm())$obsfreq
-      }
-      
       svg(file, width = 20 / 2.54, height = 20 / 2.54, pointsize = 8)
-      VisuComm(SelectComm(),
-               comm = input$commid, 
-               vertcol = "#2b3e50", 
-               vertsize = vertsize, 
-               vfacsize = input$vfacsizecom,
-               edgesize = edgesize,
-               efacsize = input$efacsizecom, 
-               textsize = input$tsizecom)
+      
+      VisuComm( SelectComm(), 
+                vsize.prop = input$vsizecom, vsize.fac = input$vfacsizecom, vsize.default = 30, 
+                esize.prop = input$esizecom, esize.fac = input$efacsizecom, 
+                vertex.label.cex = input$tsizecom / 10
+      )
       dev.off()
     })
   
