@@ -384,7 +384,8 @@ shinyServer(function(input, output, session) {
   # select level and other variables
   SelectYearCom <- reactive({
     fullGraph <- cyberData$NETKW
-    commId <- sort(unique(V(fullGraph)$clus))
+    vertices <- V(fullGraph) 
+    commId <- sort(unique(vertices$clus))
     updateSelectInput(session = session, inputId = "commid", choices = commId)
     return(fullGraph)
   })
@@ -392,7 +393,8 @@ shinyServer(function(input, output, session) {
   # select level and other variables
   SelectYearSem <- reactive({
     fullGraph <- cyberData$NETKW
-    kwId <- sort(unique(V(fullGraph)$name))
+    vertices <- V(fullGraph)
+    kwId <- sort(unique(vertices$name))
     updateSelectInput(session = session, inputId = "kwid2", choices = kwId)
     return(fullGraph)
   })
@@ -400,7 +402,8 @@ shinyServer(function(input, output, session) {
   # select community
   SelectComm <- reactive({
     fullGraph <- SelectYearCom()
-    commSubgraph <- induced.subgraph(fullGraph, vids=V(fullGraph)[V(fullGraph)$clus == input$commid])
+    vertices <- V(fullGraph)
+    commSubgraph <- induced.subgraph(fullGraph, vids=vertices[vertices$clus == input$commid])
   })
   
   # create semantic field
