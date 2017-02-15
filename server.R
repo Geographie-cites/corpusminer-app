@@ -431,36 +431,18 @@ shinyServer(function(input, output, session) {
   
   
   # panel "Communities"
-  
   output$plotcomm <- renderPlot({
-    if(input$vsizecom == "uni" && input$esizecom == "rel"){
-      vertsize <- 1
-      edgesize <- E(SelectComm())$relresid
-    } else if(input$vsizecom == "uni" && input$esizecom == "nbl"){
-      vertsize <- 1
-      edgesize <- E(SelectComm())$obsfreq
-    } else if(input$vsizecom == "poi" && input$esizecom == "rel"){
-      vertsize <- V(SelectComm())$nbauth
-      edgesize <- E(SelectComm())$relresid
-    } else if(input$vsizecom == "poi" && input$esizecom == "nbl"){
-      vertsize <- V(SelectComm())$nbauth
-      edgesize <- E(SelectComm())$obsfreq
-    } else if(input$vsizecom == "deg" && input$esizecom == "rel"){
-      vertsize <- V(SelectComm())$degbeg
-      edgesize <- E(SelectComm())$relresid
-    } else if(input$vsizecom == "deg" && input$esizecom == "nbl"){
-      vertsize <- V(SelectComm())$degbeg
-      edgesize <- E(SelectComm())$obsfreq
-    }
-    
-    VisuComm(SelectComm(), 
+    g <- SelectComm()
+    sizes <- plotcomm_sizes( input$vsizecom, input$esizecom, edges = E(g), vertices = V(g) )
+    VisuComm(g, 
              comm = input$commid, 
              vertcol = "#2b3e50", 
-             vertsize = vertsize, 
+             vertsize = sizes$vertsize, 
              vfacsize = input$vfacsizecom,
-             edgesize = edgesize,
+             edgesize = sizes$edgesize,
              efacsize = input$efacsizecom, 
-             textsize = input$tsizecom)
+             textsize = input$tsizecom
+    )
     
   })
   
