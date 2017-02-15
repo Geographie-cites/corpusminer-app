@@ -378,8 +378,7 @@ shinyServer(function(input, output, session) {
   
   # select level and other variables
   SelectYearRes <- reactive({
-    fullGraph <- cyberData$NETKW
-    return(fullGraph)
+    cyberData$NETKW
   })
   
   # select level and other variables
@@ -396,14 +395,6 @@ shinyServer(function(input, output, session) {
     kwId <- sort(unique(V(fullGraph)$name))
     updateSelectInput(session = session, inputId = "kwid2", choices = kwId)
     return(fullGraph)
-  })
-  
-  
-  # create information table for nodes
-  InfoTableNodes <- reactive({
-    g <- SelectYearRes()
-    infoNodes <- data.frame(KEYWORDS = V(g)$name, NB_ARTICLES = V(g)$nbauth, DEGREE = V(g)$degbeg)
-    return(infoNodes)
   })
   
   # create information table for edges
@@ -440,7 +431,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$contentsnodes <- renderDataTable({
-    InfoTableNodes()
+    info_table_nodes( g = cyberData$NETKW ) 
   })
   
   output$contentsedges <- renderDataTable({
