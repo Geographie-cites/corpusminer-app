@@ -397,18 +397,6 @@ shinyServer(function(input, output, session) {
     return(fullGraph)
   })
   
-  # create information table for edges
-  InfoTableEdges <- reactive({
-    g <- SelectYearRes()
-    infoEdges <- get.data.frame(g)
-    tabEdges <- data.frame(KEYWORD1 = infoEdges[ , 1],
-                           KEYWORD2 = infoEdges[ , 2],
-                           OBSERVED_WEIGHT = infoEdges[ , 3],
-                           EXPECTED_WEIGHT = round(infoEdges[ , 4], 2),
-                           RESIDUALS = round(infoEdges[ , 5], 2))
-    return(tabEdges)
-  })
-  
   # select community
   SelectComm <- reactive({
     fullGraph <- SelectYearCom()
@@ -435,7 +423,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$contentsedges <- renderDataTable({
-    InfoTableEdges()
+    info_table_edges( g = cyberData$NETKW )
   })
   
   
