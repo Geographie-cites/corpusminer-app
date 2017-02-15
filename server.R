@@ -28,10 +28,10 @@ shinyServer(function(input, output, session) {
     if (input$semanticMethod == "Citations")  themeNames$listThemes = colnames(justeTerms)[2:13]
     if (input$semanticMethod == "Keywords")  themeNames$listThemes = colnames(hadriTerms)[2:11]
     if (input$semanticMethod == "Semantic")  themeNames$listThemes = nameThemes
-    })
+  })
     
  
-    subsetArticles <- reactive({
+  subsetArticles <- reactive({
     allArticles <- cyberData$ARTICLES
     years = yearValues$years
     articles = allArticles[substr(allArticles$date.1, 1, 4) %in% as.character(years),]
