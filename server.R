@@ -436,12 +436,7 @@ shinyServer(function(input, output, session) {
   # panel "Data summary"
   
   output$textfull <- renderText({
-    summarytext <- paste("<strong>Description :</strong> The network has <strong>",
-                         vcount(SelectYearRes()), 
-                         " vertices</strong> (number of keywords) and <strong>",
-                         ecount(SelectYearRes()),
-                         " edges</strong> (number of edges between keywords).",
-                         sep = "")
+    describe_network( SelectYearRes() )
   })
   
   output$contentsnodes <- renderDataTable({
