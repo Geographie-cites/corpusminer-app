@@ -48,7 +48,7 @@ shinyServer(function(input, output, session) {
     return(countryBase)   
   })
   
-   output$statArticles = renderDataTable({
+  output$statArticles = renderDataTable({
     tab = data.frame()
     articlesDF = subsetArticles()
     nPapers = dim(articlesDF)[1]
@@ -65,7 +65,7 @@ shinyServer(function(input, output, session) {
     tab[2,1] = "Number of authors"
     tab[2,2] = Nauthors
     
-     cols = colnames(articlesDF)
+    cols = colnames(articlesDF)
     authoring = cols[substr(cols,1, 2) == "A_"]
     sumsAByCountry = colSums(articlesDF[,authoring])
     authoringCountries = sumsAByCountry[sumsAByCountry>0]
@@ -123,15 +123,15 @@ shinyServer(function(input, output, session) {
     years = input$dateRange
     if(length(years) == 1) {
       Year = years
-      } else {
-        Year = paste0(years[1], " - ", years[length(years)])
-      }
+    } else {
+      Year = paste0(years[1], " - ", years[length(years)])
+    }
     
     par(mfrow=c(1,1), mar = c(0,0,1,0), bg="#2b3e50")
     
     if (input$whatMapped == "A"){
-    plot(REG, col=REG@data$AuthoringAtAll, border="white", lwd=0.7)
-    title(paste0("Countries authoring Cybergeo articles | ", Year), col.main = "white")
+      plot(REG, col=REG@data$AuthoringAtAll, border="white", lwd=0.7)
+      title(paste0("Countries authoring Cybergeo articles | ", Year), col.main = "white")
     }
     if (input$whatMapped == "S"){
       plot(REG, col=REG@data$StudiedAtAll, border="white", lwd=0.7)
@@ -139,7 +139,8 @@ shinyServer(function(input, output, session) {
     }
     if (input$whatMapped == "L"){
       plot(REG, col=REG@data$SelfStudiedAtAll, border="white", lwd=0.7)
-        title(paste0("Countries studied by locals in Cybergeo articles | ", Year), col.main = "white") }
+      title(paste0("Countries studied by locals in Cybergeo articles | ", Year), col.main = "white") 
+    }
    })
   
   
@@ -152,7 +153,7 @@ shinyServer(function(input, output, session) {
     termCountryRelation = input$aggregationMethod
     articles = cyberData$ARTICLES
     
-     if(termCountryRelation == "Authoring") tcr = authors
+    if(termCountryRelation == "Authoring") tcr = authors
     if(termCountryRelation ==  "Studied") tcr = studies
     if (termsMethod == "Citations"){
       cybterms = justeTerms[justeTerms$CYBERGEOID != 0,]
@@ -162,13 +163,13 @@ shinyServer(function(input, output, session) {
     if (termsMethod == "Keywords"){
       cybterms = hadriTerms
       cybterms2 = data.frame(cybterms, articles[match(cybterms$ID,articles$id), ])
-      }
+    }
     if (termsMethod == "Semantic"){
       articlesWithThemes = data.frame(articles, files[match(articles$id,files$id), ])
       cybterms = articlesWithThemes[,c("id",themeNames)]
       cybtermsbis = cybterms[complete.cases(cybterms[,themeNames]),]
       cybterms2 = data.frame(cybtermsbis, articles[match(cybtermsbis$id,articles$id), ])
-     }
+    }
     
     cybterms3 = data.frame(cybterms2, lookup[match(cybterms2$firstauthor,lookup$countries), ])
     cybterms4 = cybterms3[complete.cases(cybterms3$id.1),]
@@ -210,33 +211,30 @@ shinyServer(function(input, output, session) {
     par(mfrow=c(1,1), mar = c(0,0,1,0), bg="#2b3e50")
     plot(REG, col=REG@data$groupColour, border="white", lwd=0.7)
     title("Groups of countries based on semantic networks", col.main = "white") 
-})
+  })
   
-   output$termsXCountriesLegend = renderPlot({
-     groupsOfCountries = input$nClassifGroups 
-     themeNames = themeNames$listThemes
-     leg = legCahCountries()
-       if(groupsOfCountries %% 2 == 0) window = c(groupsOfCountries/2,2)
-       if(groupsOfCountries %% 2 == 1) window = c(groupsOfCountries/2 + 0.5,2)
-     termsMethod = input$semanticMethod
-     themes_By_country_bf = clusterCountries()
-     themes_By_country_bf$group =  cahCountriesBasedOnTerms(themes_By_country_bf = themes_By_country_bf, numberOfGroups = groupsOfCountries, themes = themeNames)
-     nArticlesByGroup = aggregate(themes_By_country_bf[,"n"], by = list(themes_By_country_bf$group), FUN = sumNum)
+  output$termsXCountriesLegend = renderPlot({
+    groupsOfCountries = input$nClassifGroups 
+    themeNames = themeNames$listThemes
+    leg = legCahCountries()
+    if(groupsOfCountries %% 2 == 0) window = c(groupsOfCountries/2,2)
+    if(groupsOfCountries %% 2 == 1) window = c(groupsOfCountries/2 + 0.5,2)
+    termsMethod = input$semanticMethod
+    themes_By_country_bf = clusterCountries()
+    themes_By_country_bf$group =  cahCountriesBasedOnTerms(themes_By_country_bf = themes_By_country_bf, numberOfGroups = groupsOfCountries, themes = themeNames)
+    nArticlesByGroup = aggregate(themes_By_country_bf[,"n"], by = list(themes_By_country_bf$group), FUN = sumNum)
     colnames(nArticlesByGroup) = c("ID", "n")
     nArticlesByGroup = nArticlesByGroup[order(nArticlesByGroup$ID),]
      
-     par(mfrow=window, las=2, mar = c(4,10,2,1), bg="#2b3e50")
-     for(i in 1:groupsOfCountries){
-     barplot(leg[i,], col=paletteCybergeo[i], horiz=TRUE, cex.names=0.8, xlab= "Frequency of themes", col.lab="white", col.axis="white")
-       axis(1, col = "white", col.axis = "white")
-     if(nArticlesByGroup[i, "n"] == 1)  title(paste0(nArticlesByGroup[i, "n"], " article"), col.main = "white")
-     if(nArticlesByGroup[i, "n"] > 1)  title(paste0(nArticlesByGroup[i, "n"], " articles"), col.main = "white")
-     }
-   })
+    par(mfrow=window, las=2, mar = c(4,10,2,1), bg="#2b3e50")
+    for(i in 1:groupsOfCountries){
+      barplot(leg[i,], col=paletteCybergeo[i], horiz=TRUE, cex.names=0.8, xlab= "Frequency of themes", col.lab="white", col.axis="white")
+      axis(1, col = "white", col.axis = "white")
+      if(nArticlesByGroup[i, "n"] == 1)  title(paste0(nArticlesByGroup[i, "n"], " article"), col.main = "white")
+      if(nArticlesByGroup[i, "n"] > 1)  title(paste0(nArticlesByGroup[i, "n"], " articles"), col.main = "white")
+    }
+  })
   
-
-
-
   ### Juste ----
   
    

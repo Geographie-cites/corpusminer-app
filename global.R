@@ -10,8 +10,8 @@
 library(shiny)
 library(rgdal)
 library(plyr)
-library(mapproj) 
-library(maptools) 
+library(mapproj)
+library(maptools)
 library(RColorBrewer)
 library(RCurl)
 library(ggplot2)
@@ -43,7 +43,7 @@ aggregateCountriesBasedOnTerms = function(themesFile, themes, countries_to_aggre
   themes_By_country_bf = data.frame("CountryID" = countries_to_aggregate)
   themes_By_country_bf[,themes] = NA
   themes_By_country_bf$n = NA
-  
+
   for (c in countries_to_aggregate){
     articles_to_aggregate = themesFile[themesFile[,c] == 1,themes]
     if (!is.null(articles_to_aggregate)){
@@ -51,7 +51,7 @@ aggregateCountriesBasedOnTerms = function(themesFile, themes, countries_to_aggre
       themes_By_country_bf[themes_By_country_bf$CountryID == c, themes] = colSums(articles_to_aggregate) / nArticles
       themes_By_country_bf[themes_By_country_bf$CountryID == c, "n"] = nArticles
     }}
-  
+
   themes_By_country_bf = themes_By_country_bf[complete.cases(themes_By_country_bf),]
   themes_By_country_bf$CountryID = substr(themes_By_country_bf$CountryID, 3,4)
   return(themes_By_country_bf)
@@ -67,7 +67,7 @@ aggregateCountriesBasedOnTerms = function(themesFile, themes, countries_to_aggre
 #' @param themes: the list of themes of the analysis
 #' @param groups_Country, a vector of group IDs for each country
 cahCountriesBasedOnTerms = function(themes_By_country_bf, numberOfGroups, themes){
-themesScaled = scale(themes_By_country_bf[,themes])
+  themesScaled = scale(themes_By_country_bf[,themes])
   rownames(themesScaled) = themes_By_country_bf[,1]
   d.themes = dist(themesScaled)
   cah.themes = hclust(d.themes, method = "ward.D2")
@@ -81,7 +81,7 @@ themesScaled = scale(themes_By_country_bf[,themes])
 #'
 #' @name sumNum
 #' @description This function ensures that no <NA> is returned for a sum if one element of the sum is <NA> it is used in aggregate and apply functions.
-#' @param  x: a vector of elements to sum  
+#' @param  x: a vector of elements to sum
 #' Returns: y, a single value (the sum)
 sumNum = function(x){
   y = sum(x, na.rm= T)
@@ -92,19 +92,19 @@ sumNum = function(x){
 
 #' @name stat.comp
 #' @description This function computes the average frquencies of themes by cah group
-#'   it is used in the legend of the cah map 
+#'   it is used in the legend of the cah map
 #' @param x: a dataframe of theme frequency by country (themes_By_country_bf) in which lines represent country codes and columns represent the number of articles for each themes
 #' @param y: a vector of group numbers the length of the dataframe rows
 #' @value result, a dataframe in which lines represent cah groups of country and columns represent the frequency of articles for each theme
 stat.comp<-  function( x,y){
-  K <-length(unique(y))
-  n <-length(x)
-  m <-mean(x)
-  TSS <-sum((x-m)^2)
-  nk<-table(y)
-  mk<-tapply(x,y,mean)
+  K <- length(unique(y))
+  n <- length(x)
+  m <- mean(x)
+  TSS <- sum((x-m)^2)
+  nk <- table(y)
+  mk <- tapply(x,y,mean)
   BSS <-sum(nk* (mk-m)^2)
-  result<-c(mk,100.0*BSS/TSS)
+  result <- c(mk,100.0*BSS/TSS)
   names(result) <-c( paste("G",1:K),"% epl.")
   return(result)
 }
@@ -152,7 +152,7 @@ poTerms = read.csv("data/20themes20words.csv", sep=",", dec=".")
 
 nameThemes = c(as.character(poTerms$NAME), "Other")
 colnames(document.themes) = nameThemes
-files[,3:22] = document.themes 
+files[,3:22] = document.themes
 colnames(files)[3:22] = nameThemes
 
 
@@ -182,7 +182,7 @@ pattern_list <- c("espace", "territoire", "environnement", "société", "réseau
 
 
 
-######## PO : 
+######## PO :
 ##   Regexp terms in full textes
 
 
@@ -193,13 +193,13 @@ pattern_list <- c("espace", "territoire", "environnement", "société", "réseau
 
 # Read the terms dataframe
 terms <- read.table(
-  "data/terms.csv", 
-  sep = ";", 
-  quote = "", 
-  comment.char = "", 
+  "data/terms.csv",
+  sep = ";",
+  quote = "",
+  comment.char = "",
   header = TRUE,
   stringsAsFactors = FALSE
-) %>% 
+) %>%
   tbl_df() %>%
   dplyr::mutate(
     article_id = id,
@@ -209,13 +209,13 @@ terms <- read.table(
 
 # Read the sentences dataframe
 sentences <- read.table(
-  "data/sentences.csv", 
-  sep = "|", 
-  quote = "", 
-  comment.char = "", 
+  "data/sentences.csv",
+  sep = "|",
+  quote = "",
+  comment.char = "",
   header = TRUE,
   stringsAsFactors=FALSE
-) %>% 
+) %>%
   tbl_df() %>%
   dplyr::mutate(
     article_id = id,
@@ -224,12 +224,12 @@ sentences <- read.table(
 
 # Read the metadata of articles
 articles <- read.table(
-  "data/cybergeo.csv", 
-  sep = ",", 
-  quote = "\"", 
-  comment.char = "", 
+  "data/cybergeo.csv",
+  sep = ",",
+  quote = "\"",
+  comment.char = "",
   header = TRUE
-) %>% 
+) %>%
   tbl_df() %>%
   dplyr::rename(titre = title_en, auteurs = authors) %>%
   dplyr::mutate(citation = paste(sep = ". ", auteurs, substr(date,1,4), titre)) %>%
@@ -254,7 +254,7 @@ terms_matched <- function(patterns) {
     dplyr::left_join(terms, by = c("id")) %>%
     dplyr::arrange(id, pattern)
   return(data)
-} 
+}
 
 #' @title Matched articles list
 #' @name titles_matched
@@ -343,7 +343,7 @@ cloud <- function(patterns) {
     words$articles,
     scale = c(10,1),
     rot.per = 0
-  ) 
+  )
 }
 
 
@@ -365,15 +365,15 @@ cloud <- function(patterns) {
 ### Juste ---
 #
 #  --  Archi for cit. nw exploration  --
-# 
+#
 #   - data/semanticnw.RData is not loaded as huge ; replaced by sqlite
 #    -> for performance, can be fully loaded is speed is prefered over memory
 #   - load datatable for cybergeo articles ; request in local sqlite db for connections
 #   - get the ego nw, and display info for neighbors
 #   - display semantic info : keywords, corresponding communities.
 #   - one tab with sem nw visu : svg viz
-# 
-# 
+#
+#
 
 
 ##
@@ -483,7 +483,7 @@ citationVisuEgo<-function(edges){
 }
 
 
-                      
+
 
 
 #'
@@ -507,135 +507,3 @@ citationWordclouds<-function(id,keywords){
     )
   }
 }
-
-
-
-
-
-
-
-#######################
-### Hadri
-
-# plot communities ----
-
-
-# Description: plot the communities (result of any community detection algo, here Louvain method)
-VisuComm <- function(g, # igraph network
-                     comm, # scalar, character, name of the community
-                     vertcol, # scalar, character, vertex color 
-                     vertsize, # scalar, numeric, vertex size
-                     vfacsize, # scalar, numeric, expansion factor for vertex size
-                     edgesize, # scalar, numeric, edge width
-                     efacsize, # scalar, numeric, expansion factor for edge width
-                     textsize) # scalar, numeric, font size
-{  
-  par(bg = "#4e5d6c")
-  # circle layout with sampled coordinates
-  oriCoords <- layout_in_circle(g)
-  corrCoords <- oriCoords[sample(seq(1, nrow(oriCoords), 1), size = nrow(oriCoords), replace = FALSE), ]
-  
-  plot(g,
-       edge.color = "#df691a",
-       edge.width = efacsize * edgesize,
-       edge.curved = F,
-       edge.arrow.mode = "-",
-       edge.arrow.size = 0.01,
-       vertex.color = vertcol,
-       vertex.frame.color = "#df691a",
-       vertex.label = V(g)$name,
-       vertex.label.color = "#ebebeb",
-       vertex.label.family = "sans-serif",
-       vertex.label.cex = textsize / 10,
-       vertex.size = vfacsize * vertsize,
-       layout = corrCoords
-  )
-}
-
-
-
-# Description: plot the semantic field of a selected keyword (inverse proportional distance to pseudo-chi2 distance)
-VisuSem <- function(g, # igraph network
-                    kw, # scalar, character, name of the keyword
-		    chidist, # scalar, character, name of the field storing pseudo-chi2 distance
-                    textsizemin, # scalar, numeric, minimum font size
-                    textsizemax) # scalar, numeric, maximum font sizes
-{
-  # make theme empty
-  theme_empty <- theme_bw() +
-    theme(plot.background = element_rect(fill = "#4e5d6c"),
-          axis.line = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_rect(fill = "#4e5d6c"),
-          axis.title = element_blank(),
-          axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          legend.position = "none",
-          legend.background = element_rect(fill = "#4e5d6c"))
-  
-  # graph layout
-  tabPoints <- get.data.frame(x = g, what = "vertices")
-  tabLinks <- get.data.frame(x = g, what = "edges")
-  tabLinks$NODES <- ifelse(tabLinks$from == kw, tabLinks$to, tabLinks$from)
-  tabPoints <- tabPoints %>% left_join(x = ., y = tabLinks, by = c("name" = "NODES"))
-  
-  # compute distance from ego
-  tabPoints$DIST <- 1 / tabPoints[[chidist]]
-  thresRadis <- seq(0, 0.1 + max(tabPoints$DIST, na.rm = TRUE), 0.1)
-  tabPoints$X <- cut(tabPoints$DIST, breaks = thresRadis, labels = thresRadis[-1], include.lowest = TRUE, right = FALSE)
-  tabPoints <- tabPoints %>% group_by(X) %>% mutate(NPTS = n())
-  
-  # get x values
-  tabPoints <- tabPoints %>% do(GetXvalues(df = .))
-  tabPoints[tabPoints$name == kw, c("XVAL", "DIST")] <- c(0, 0)
-  
-  # prepare plot
-  tabPoints$IDEGO <- ifelse(tabPoints$name == kw, 2, 1)
-  tabCircle <- data.frame(XVAL = c(0, 360), DIST = 1)
-  
-  # draw plot
-  circVis <- ggplot() + 
-    geom_line(data = tabCircle, aes(x = XVAL, y = DIST), color = "#df691a") + 
-    geom_text(data = tabPoints, aes(x = XVAL, y = DIST, label = name, fontface = IDEGO, color = factor(IDEGO), size = nbauth)) +
-    scale_colour_manual("Type", values = c("#ebebeb", "#df691a")) +
-    scale_size_continuous("Number of articles", range = c(textsizemin, textsizemax)) +
-    coord_polar(theta = "x") +
-    theme_empty
-  
-  return(circVis)
-}
-
-
-
-# Description: sample x values for polar coordinates for the semantic field visualization (VisuSem function)
-GetXvalues <- function(df){
-  initVal <- sample(x = 0:360, size = 1, replace = FALSE)
-  tempRange <- seq(initVal, initVal + 360, 360/unique(df$NPTS))
-  tempRange <- tempRange[-length(tempRange)]
-  df$XVAL <- ifelse(tempRange > 360, tempRange - 360, tempRange) 
-  return(df)
-}
-
-
-
-# Description: create an ego subgraph for the semantic field visualization (VisuSem function)
-SemanticField <- function(g,  # igraph network
-			  kw) # scalar, character, selected keyword
-{  
-  # list of neighbors
-  neiNodes <- unlist(neighborhood(g, order = 1, nodes = V(g)[V(g)$name == kw], mode = "all"))
-  pairedNodes <- unlist(paste(which(V(g)$name == kw), neiNodes[-1], sep = ","))
-  collapseNodes <- paste(pairedNodes, collapse = ",")
-  vecNodes <- as.integer(unlist(strsplit(collapseNodes, split = ",")))
-  
-  # get edges and create graph
-  edgeIds <- get.edge.ids(g, vp = vecNodes)
-  gSem <- subgraph.edges(g, eids = edgeIds, delete.vertices = TRUE)
-  
-  return(gSem)
-}
-
-
-
