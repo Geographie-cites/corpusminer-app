@@ -22,6 +22,22 @@ dans sa partie du code. Ces jeux de données peuvent être:
   - Des fichiers `.csv`
   - Des fichiers `.sqlite3` qui sont cela dit vide parce que trop gros pour github. Nous avons évoqué [LFS](https://git-lfs.github.com) qui pourrait etre une solution
 
+## Actions
+
+Les différentes applications utilisent des données qui leur sont propres, mais aussi des données
+communes (ou qui pourraient, devraient l'etre). Il y a un travail d'unification
+de ces données à faire.
+
+Faire le point avec les auteurs de chaque application pour identifier
+les données réellement utilisées.
+
+deplacement des fonctions dans le package. Pour l'instant on a des fonctions
+dans le package et dans le global.R.
+
+simplification de la reactivité. certains reactives ne sont en fait pas ou peu reactifs,
+on pourra les reconditionner en fonctions du package afin de simplifier
+le fichier server.R. 
+
 ## Structure
 
 On retrouve plusieurs jeux de données avec une structure similaire,
@@ -113,6 +129,8 @@ les groupes de mots clés.
 
 On retrouve `854` articles et `20` groupes de mots clé.
 
+On pourra se contenter de stocker ce `files` dans un `.rds`.
+
 ## Fichiers csv
 
 # cybergeo.csv
@@ -146,7 +164,7 @@ de l'information sur des articles d'autres revues (citant cybergeo et citées pa
 ```
 
 La variable d'id (`CYBERGEOID`) est fixée à 0 pour des articles qui ne sont
-pas issus de cybergeo. 
+pas issus de cybergeo.
 
 
 # kwprop.csv

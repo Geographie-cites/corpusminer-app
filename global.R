@@ -125,6 +125,7 @@ stat.comp<-  function( x,y){
 #' @description contains cyberData = list(NETKW = igraph network of thesaurus keywords, ARTICLES keywords raw data)
 load("data/CyberData.RData")
 
+
 #'
 #' @description thesaurus themes probas
 hadriTerms = read.csv("data/kwprop.csv", sep=",", dec=".")
