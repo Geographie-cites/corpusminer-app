@@ -273,20 +273,8 @@ shinyServer(function(input, output, session) {
   # select community
   SelectComm <- reactive( extract_community_graph(cyberData$NETKW, input$commid) )
 
-  # select level and other variables
-  SelectYearSem <- reactive({
-    fullGraph <- cyberData$NETKW
-    vertices <- V(fullGraph)
-    kwId <- sort(unique(vertices$name))
-    updateSelectInput(session = session, inputId = "kwid2", choices = kwId)
-    return(fullGraph)
-  })
-
   # create semantic field
-  SelectSemField <- reactive({
-    fullGraph <- SelectYearSem()
-    SemanticField(fullGraph, kw = input$kwid2)
-  })
+  SelectSemField <- reactive(SemanticField(cyberData$NETKW, kw = input$kwid2) )
 
   # outputs ----
 
