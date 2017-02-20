@@ -38,8 +38,10 @@ library(stringr)
 load("data/CyberData.RData")
 cyberData$ARTICLES$year <- as.numeric( substr( as.character(cyberData$ARTICLES$date.1), 1, 4 ) )
 
-choices_communities <- sort( unique( V(cyberData$NETKW)$clus ))
-choices_keywords <- sort( unique( V(cyberData$NETKW)$name ))
+
+NETKW <- readRDS( "app_data/NETKW.rds")
+choices_communities <- sort( unique( V(NETKW)$clus ))
+choices_keywords <- sort( unique( V(NETKW)$name ))
 
 #'
 #' @description thesaurus themes probas

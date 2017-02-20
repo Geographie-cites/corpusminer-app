@@ -271,26 +271,26 @@ shinyServer(function(input, output, session) {
   ### HADRI ----
 
   # select community
-  SelectComm <- reactive( extract_community_graph(cyberData$NETKW, input$commid) )
+  SelectComm <- reactive( extract_community_graph(NETKW, input$commid) )
 
   # create semantic field
-  SelectSemField <- reactive(SemanticField(cyberData$NETKW, kw = input$kwid2) )
+  SelectSemField <- reactive( SemanticField(NETKW, kw = input$kwid2) )
 
   # outputs ----
 
   # panel "Data summary"
 
   output$textfull <- renderText({
-    describe_network( cyberData$NETKW )
+    describe_network( NETKW )
   })
 
   output$contentsnodes <- renderDataTable(
-    info_table_nodes( cyberData$NETKW ),
+    info_table_nodes( NETKW ),
     options = list( pageLength = 10 )
   )
 
   output$contentsedges <- renderDataTable(
-    info_table_edges( cyberData$NETKW ),
+    info_table_edges( NETKW ),
     options = list( pageLength = 10 )
   )
 
