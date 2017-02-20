@@ -12,12 +12,12 @@ shinyServer(function(input, output, session) {
   ### Overview
   #
   # data used:
-  # - cyberData$ARTICLES
+  # - ARTICLES
   # - world
 
-  # subset of the data from cyberData$ARTICLES in the date interval
+  # subset of the data from ARTICLES in the date interval
   data_overview <- reactive({
-    subset_articles( cyberData$ARTICLES, input$dateRange )
+    subset_articles( ARTICLES, input$dateRange )
   })
 
   # summary table
@@ -47,7 +47,7 @@ shinyServer(function(input, output, session) {
     themeNames = themeNames$listThemes
     groupsOfCountries = input$nClassifGroups
     termCountryRelation = input$aggregationMethod
-    articles = cyberData$ARTICLES
+    articles = ARTICLES
 
     if(termCountryRelation == "Authoring") tcr = authors
     if(termCountryRelation ==  "Studied") tcr = studies

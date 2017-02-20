@@ -33,11 +33,7 @@ library(stringr)
 
 #### Keywords network
 
-#'
-#' @description contains cyberData = list(NETKW = igraph network of thesaurus keywords, ARTICLES keywords raw data)
-load("data/CyberData.RData")
-cyberData$ARTICLES$year <- as.numeric( substr( as.character(cyberData$ARTICLES$date.1), 1, 4 ) )
-
+ARTICLES <- readRDS( "app_data/ARTICLES.rds" )
 
 NETKW <- readRDS( "app_data/NETKW.rds")
 choices_communities <- sort( unique( V(NETKW)$clus ))
