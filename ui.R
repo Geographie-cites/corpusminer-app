@@ -185,7 +185,7 @@ shinyUI(fluidPage(theme = "darkBlue.css",
                                         fluidRow(
                                           column(8, selectInput(inputId = "commid",
                                                                 label = "Choose a community",
-                                                                choices = "",
+                                                                choices = communities,
                                                                 selected = "",
                                                                 multiple = FALSE))),
                                         fluidRow(

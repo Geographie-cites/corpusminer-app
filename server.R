@@ -270,19 +270,8 @@ shinyServer(function(input, output, session) {
 
   ### HADRI ----
 
-  # select level and other variables
-  SelectYearRes <- reactive({
-    cyberData$NETKW
-  })
-
-  # select level and other variables
-  SelectYearCom <- reactive({
-    fullGraph <- cyberData$NETKW
-    vertices <- V(fullGraph)
-    commId <- sort(unique(vertices$clus))
-    updateSelectInput(session = session, inputId = "commid", choices = commId)
-    return(fullGraph)
-  })
+  # select community
+  SelectComm <- reactive( extract_community_graph(cyberData$NETKW, input$commid) )
 
   # select level and other variables
   SelectYearSem <- reactive({
@@ -293,35 +282,29 @@ shinyServer(function(input, output, session) {
     return(fullGraph)
   })
 
-  # select community
-  SelectComm <- reactive({
-    fullGraph <- SelectYearCom()
-    vertices <- V(fullGraph)
-    commSubgraph <- induced.subgraph(fullGraph, vids=vertices[vertices$clus == input$commid])
-  })
-
   # create semantic field
   SelectSemField <- reactive({
     fullGraph <- SelectYearSem()
-    SemSubgraph <- SemanticField(fullGraph, kw = input$kwid2)
+    SemanticField(fullGraph, kw = input$kwid2)
   })
-
 
   # outputs ----
 
   # panel "Data summary"
 
   output$textfull <- renderText({
-    describe_network( SelectYearRes() )
+    describe_network( cyberData$NETKW )
   })
 
-  output$contentsnodes <- renderDataTable({
-    info_table_nodes( g = cyberData$NETKW )
-  })
+  output$contentsnodes <- renderDataTable(
+    info_table_nodes( cyberData$NETKW ),
+    options = list( pageLength = 10 )
+  )
 
-  output$contentsedges <- renderDataTable({
-    info_table_edges( g = cyberData$NETKW )
-  })
+  output$contentsedges <- renderDataTable(
+    info_table_edges( cyberData$NETKW ),
+    options = list( pageLength = 10 )
+  )
 
 
   # panel "Communities"
