@@ -4,11 +4,11 @@ shinyUI(navbarPage(
   "CybergeoNetworks",
   theme = "darkBlue.css",
 
-  source( "ui/00_Project.R")$value,
-  source( "ui/01_Overview.R")$value,
-  source( "ui/02_Citation.R")$value,
-  source( "ui/03_Semantic.R")$value,
-  source( "ui/04_Keyword.R")$value,
-  source( "ui/05_GeoSemantic.R")$value
+  sub_app( "00_Project" ),
+  sub_app( "01_Overview" ),
+  sub_app( "02_Citation" ),
+  sub_app( "03_Semantic" ),
+  sub_app( "04_Keyword" ),
+  sub_app( "05_GeoSemantic" )
 
 ))
