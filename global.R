@@ -3,13 +3,11 @@
 # Packages and functions
 ##############################
 
-
-
 # load packages ----
 
 library(shiny)
 library(rgdal)
-library(plyr)
+# library(plyr)
 library(mapproj)
 library(maptools)
 library(RColorBrewer)
@@ -39,47 +37,18 @@ NETKW <- readRDS( "app_data/NETKW.rds")
 choices_communities <- sort( unique( V(NETKW)$clus ))
 choices_keywords <- sort( unique( V(NETKW)$name ))
 
-#'
-#' @description thesaurus themes probas
-hadriTerms = read.csv("data/kwprop.csv", sep=",", dec=".")
-
-
-#### Semantic network
-
-#'
-#' @description themes probas with the semantic network classification
-justeTerms = read.csv("data/docprobasJuste2.csv", sep=",", dec=".")
-
-
-#### LDA analysis
-
-#'
-#' @description LDA analysis output : files = ids and raw files ;
-#'   themes.termes = keywords of thematics ; document.themes = probability matrix
-load("data/themesPO.Rdata")
-files$name = NULL
-files$path = NULL
-
-#'
-#' @description keywords and themes from LDA
-poTerms = read.csv("data/20themes20words.csv", sep=",", dec=".")
-
-nameThemes = c(as.character(poTerms$NAME), "Other")
-colnames(document.themes) = nameThemes
-files[,3:22] = document.themes
-colnames(files)[3:22] = nameThemes
-
 
 #### Geographical data
 
-world = readOGR(dsn="data/world_withZoom.shp",
-                layer = "world_withZoom", encoding="utf8", verbose = F)
+world = readOGR(dsn="data/world_withZoom.shp", layer = "world_withZoom",
+  encoding="utf8", verbose = F)
+
 countries = as.character(world@data$CNTR_ID)
-locals = paste0("L_", countries)
-authors = paste0("A_", countries)
-studies = paste0("S_", countries)
-lookup = data.frame(countries)
-lookup$polyID = as.numeric(rownames(lookup)) - 1
+geo_semantic_data <- list(
+  Keywords  = load_geo_semantic_data( "app_data/keyword_themes.csv", ARTICLES, countries ),
+  Citations = load_geo_semantic_data( "app_data/citation_themes.csv", ARTICLES, countries ),
+  Semantic  = load_geo_semantic_data( "app_data/semantic_themes.csv", ARTICLES, countries )
+)
 
 ######## PO :
 ##   Regexp terms in full textes
