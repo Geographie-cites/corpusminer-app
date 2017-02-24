@@ -59,7 +59,7 @@
        citationGlobalVars$citationSelected=selected[1]
        selectedschid = citation_cybergeodata$SCHID[as.numeric(selected[1])]
        # make request for edges in sqlitedb
-       citationGlobalVars$edges = citationLoadEdges(selectedschid)
+       citationGlobalVars$edges = citationLoadEdges(citationdbcit, selectedschid)
      }
    }
  })
@@ -73,7 +73,7 @@
      if(selected[1]!=citationGlobalVars$citationSemanticSelected){
        citationGlobalVars$citationSemanticSelected=selected[1]
        selectedschid = citation_cybergeodata$SCHID[as.numeric(selected[1])]
-       citationGlobalVars$keywords = citationLoadKeywords(selectedschid)
+       citationGlobalVars$keywords = citationLoadKeywords(citationdbcit, citationdbkws, selectedschid)
      }
    }
  })
