@@ -1,0 +1,9 @@
+{
+    "path" : "~/git/corpusminer-app",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
